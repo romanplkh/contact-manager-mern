@@ -1,3 +1,4 @@
 {
-	"mongoURI": "mongodb+srv://roman:Lovelife89!@cluster0-ns6f2.mongodb.net/contact-manager?retryWrites=true&w=majority"
+	"mongoURI": "mongodb+srv://roman:Lovelife89!@cluster0-ns6f2.mongodb.net/contact-manager?retryWrites=true&w=majority",
+	"jwtSecret": "mysupersecret123!@#()*"
 }
