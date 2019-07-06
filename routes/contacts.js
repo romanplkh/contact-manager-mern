@@ -21,7 +21,8 @@ router.post(
 	contactsController.postContact
 );
 
-router.put('/:id', contactsController.putUpdateContact);
-router.delete('/:id', contactsController.deleteContact);
+router.put('/:id', isAuthorized, contactsController.putUpdateContact);
+
+router.delete('/:id', isAuthorized, contactsController.deleteContact);
 
 module.exports = router;

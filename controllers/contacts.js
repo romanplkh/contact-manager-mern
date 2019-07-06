@@ -42,12 +42,57 @@ exports.postContact = async (req, res, next) => {
 	}
 };
 
-exports.putUpdateContact = (req, res, next) => {
-	const { id } = req.param;
-	res.send('Update contact');
+exports.putUpdateContact = async (req, res, next) => {
+	const { id } = req.params;
+
+	try {
+		const contact = await Contact.findById(id);
+
+		if (!contact) {
+			return res.status(404).json({ msg: 'Contact is not found' });
+		}
+
+		if (contact.user.toString() !== req.user.id.toString()) {
+			return res.status(401).json({ msg: 'Not authorized' });
+		}
+
+		let contactUpdated = await Contact.findByIdAndUpdate(id, req.body, {
+			new: true
+		});
+
+		res.json(contactUpdated);
+	} catch (error) {
+		console.log(error.message);
+		res.status(500).send('Server error');
+	}
 };
 
-exports.deleteContact = (req, res, next) => {
-	const { id } = req.param;
-	res.send('Delete contact');
+exports.deleteContact = async (req, res, next) => {
+	const { id } = req.params;
+
+	try {
+		const contact = await Contact.findById(id);
+
+		if (!contact) {
+			return res.status(404).json({ msg: 'Contact is not found' });
+		}
+
+		if (contact.user.toString() !== req.user.id.toString()) {
+			return res.status(401).json({ msg: 'Not authorized' });
+		}
+
+		const result = await Contact.deleteOne({ _id: contact.id });
+
+		if (!result.ok) {
+			console.log(error.message);
+			res.status(500).send('Server error. Could not delete contact. Try later');
+		}
+
+		res.json({
+			msg: `${result.deletedCount} Contact successfully removed`
+		});
+	} catch (error) {
+		console.log(error.message);
+		res.status(500).send('Server error');
+	}
 };
