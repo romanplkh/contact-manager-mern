@@ -8,10 +8,15 @@ const ContactItem = ({
 }) => {
 	const contactCtx = useContext(ContactContext);
 
-	const { deleteContact, setCurrentContact } = contactCtx.actions;
+	const {
+		deleteContact,
+		setCurrentContact,
+		clearCurrentContact
+	} = contactCtx.actions;
 
 	const onDelete = () => {
-		deleteContact(id);
+    deleteContact(id);
+		clearCurrentContact();
 	};
 
 	return (

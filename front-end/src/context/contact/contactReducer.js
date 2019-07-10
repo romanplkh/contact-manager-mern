@@ -31,6 +31,36 @@ export default (state, action) => {
 				...state,
 				current: null
 			};
+		case UPDATE_CONTACT:
+			const indexContact = state.contacts.findIndex(
+				el => el.id == action.payload.id
+			);
+
+			const updatedContacts = [
+				...state.contacts.slice(0, indexContact),
+				action.payload,
+				...state.contacts.slice(indexContact + 1)
+			];
+
+			return {
+				...state,
+				contacts: updatedContacts
+			};
+		case FILTER_CONTACTS:
+			return {
+				...state,
+				filtered: state.contacts.filter(el => {
+					const reg = new RegExp(`${action.payload}`, 'gi');
+
+					return el.name.match(reg) || el.email.match(reg);
+				})
+			};
+		case CLEAR_FILTER:
+			return {
+				...state,
+				filtered: null
+			};
+
 		default:
 			return state;
 	}
