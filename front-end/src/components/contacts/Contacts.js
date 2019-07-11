@@ -8,7 +8,7 @@ const Contacts = () => {
 	const contactCtx = useContext(ContactContext);
 
 	const { contacts, filtered } = contactCtx;
-
+ 
 	if (contacts.length == 0) {
 		return <h1>Please add contact</h1>;
 	}
