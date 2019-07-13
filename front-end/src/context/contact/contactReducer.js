@@ -19,7 +19,7 @@ export default (state, action) => {
 		case DELETE_CONTACT:
 			return {
 				...state,
-				contacts: state.contacts.filter(el => el.id != action.payload)
+				contacts: state.contacts.filter(el => el.id !== action.payload)
 			};
 		case SET_CURRENT:
 			return {
@@ -33,7 +33,7 @@ export default (state, action) => {
 			};
 		case UPDATE_CONTACT:
 			const indexContact = state.contacts.findIndex(
-				el => el.id == action.payload.id
+				el => el.id === action.payload.id
 			);
 
 			const updatedContacts = [

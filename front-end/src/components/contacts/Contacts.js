@@ -9,7 +9,7 @@ const Contacts = () => {
 
 	const { contacts, filtered } = contactCtx;
  
-	if (contacts.length == 0) {
+	if (contacts.length === 0) {
 		return <h1>Please add contact</h1>;
 	}
 

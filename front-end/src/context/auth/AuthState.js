@@ -2,6 +2,7 @@ import React, { useReducer } from 'react';
 import axios from 'axios';
 import AuthContext from './AuthContext';
 import AuthReducer from './AuthReducer';
+import setAuthToken from '../../utils/setAuthToken';
 import {
 	REGISTER_SUCCESS,
 	REGISTER_FAIL,
@@ -28,24 +29,44 @@ const AuthState = props => {
 
 	//Actions
 
-	//!Load User
+	//!Load User - get data fo logged in user
+	const loadUser = async () => {
+		//* Load token into global headers
+		if (localStorage.token) {
+			setAuthToken(localStorage.token);
+		}
+
+		try {
+			const user = await axios.get('/api/auth');
+
+			dispatch({ type: USER_LOADED, payload: user.data });
+		} catch (error) {
+			dispatch({ type: AUTH_ERROR, payload: error.response.data });
+		}
+	};
 
 	//!Register User => returns JWT token
 	const registerUser = async user => {
 		try {
 			const resp = await axios.post('/api/users', user);
-			dispatch({ type: REGISTER_SUCCESS, payload: resp.data });
-		} catch (error) {
-			console.log(error.response.data);
 
-			//msg - custom message that I return from calling api
+			dispatch({ type: REGISTER_SUCCESS, payload: resp.data });
+			loadUser();
+		} catch (error) {
 			dispatch({ type: REGISTER_FAIL, payload: error.response.data.msg });
 		}
 	};
 
 	//!Login User
-
-	const loginUser = () => console.log('Login');
+	const loginUser = async user => {
+		try {
+			const resp = await axios.post('/api/auth', user);
+			dispatch({ type: LOGIN_SUCCESS, payload: resp.data });
+			loadUser();
+		} catch (error) {
+			dispatch({ type: LOGIN_FAIL, payload: error.response.data.msg });
+		}
+	};
 
 	//!Logout User
 	const logoutUser = () => console.log('Logout');
@@ -61,7 +82,7 @@ const AuthState = props => {
 				isAuthenticated: state.isAuthenticated,
 				loading: state.loading,
 				error: state.error,
-				actions: { registerUser, loginUser, logoutUser, clearErrors }
+				actions: { registerUser, loginUser, logoutUser, clearErrors, loadUser }
 			}}
 		>
 			{props.children}

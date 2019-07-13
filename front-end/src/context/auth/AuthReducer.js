@@ -9,27 +9,44 @@ import {
 	CLEAR_ERRORS
 } from '../types';
 
+const validationFail = (state, action) => {
+	console.log('Validation failed');
+	localStorage.removeItem('token');
+	return {
+		...state,
+		token: null,
+		isAuthenticated: false,
+		loading: false,
+		user: null,
+		error: action.payload
+	};
+};
+
 export default (state, action) => {
 	switch (action.type) {
 		case REGISTER_SUCCESS:
-			localStorage.setItem('token', action.payload);
+		case LOGIN_SUCCESS:
+			localStorage.setItem('token', action.payload.token);
 			return {
 				...state,
-				...action.payload,
+				token: action.payload.token,
 				isAuthenticated: true,
 				loading: false
 			};
 
 		case REGISTER_FAIL:
-			localStorage.removeItem('token');
+		case LOGIN_FAIL:
+			return validationFail(state, action);
+		case USER_LOADED:
 			return {
 				...state,
-				token: null,
-				isAuthenticated: false,
+				isAuthenticated: true,
 				loading: false,
-				user: null,
-				error: action.payload
+				user: action.payload
 			};
+		case AUTH_ERROR:
+			return validationFail(state, action);
+
 		case CLEAR_ERRORS:
 			return {
 				...state,

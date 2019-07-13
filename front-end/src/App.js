@@ -12,6 +12,12 @@ import AuthState from './context/auth/AuthState';
 import AlertState from './context/alert/AlertState';
 import Alert from './components/layout/Alert';
 
+import setAuthtoken from './utils/setAuthToken';
+
+if (localStorage.token) {
+	setAuthtoken(localStorage.token);
+}
+
 const App = () => {
 	return (
 		<AuthState>
