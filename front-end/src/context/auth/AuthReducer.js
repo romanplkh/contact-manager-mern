@@ -10,7 +10,6 @@ import {
 } from '../types';
 
 const validationFail = (state, action) => {
-	console.log('Validation failed');
 	localStorage.removeItem('token');
 	return {
 		...state,
@@ -36,6 +35,7 @@ export default (state, action) => {
 
 		case REGISTER_FAIL:
 		case LOGIN_FAIL:
+		case LOGOUT:
 			return validationFail(state, action);
 		case USER_LOADED:
 			return {
@@ -52,6 +52,7 @@ export default (state, action) => {
 				...state,
 				error: null
 			};
+
 		default:
 			return state;
 	}
